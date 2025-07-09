@@ -43,12 +43,12 @@ export const LoginForm = ({
               <div className="grid gap-3">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
-                  <Link
+                  {/* <Link
                     href="#"
                     className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
-                  </Link>
+                  </Link> */}
                 </div>
                 <Input id="password" type="password" required />
               </div>
@@ -63,7 +63,10 @@ export const LoginForm = ({
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <Link href="#" className="underline underline-offset-4">
+              <Link
+                href="/registration"
+                className="underline underline-offset-4"
+              >
                 Sign up
               </Link>
             </div>
