@@ -11,14 +11,31 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useGetTempQuery } from "@/apis/authApi";
+import { useUserLoginMutation } from "@/apis/authApi";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { PATHS } from "@/utils/constant";
+import { useRouter } from "next/navigation";
 
 export const LoginForm = ({
   className,
   ...props
 }: React.ComponentProps<"div">) => {
-  const { data: tempData } = useGetTempQuery();
-  console.log({ tempData });
+  const router = useRouter();
+  const [userLoginPayload, { isSuccess }] = useUserLoginMutation();
+
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  useEffect(() => {
+    if (isSuccess) {
+      router.push(PATHS.HOME);
+    }
+  });
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -29,7 +46,15 @@ export const LoginForm = ({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form>
+          <form
+            onSubmit={handleSubmit((data) => {
+              console.log("Form data:", data);
+              userLoginPayload({
+                email: data.email,
+                password: data.password,
+              });
+            })}
+          >
             <div className="flex flex-col gap-6">
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
@@ -38,19 +63,17 @@ export const LoginForm = ({
                   type="email"
                   placeholder="m@example.com"
                   required
+                  {...register("email", { required: true })}
                 />
               </div>
               <div className="grid gap-3">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  {/* <Link
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </Link> */}
-                </div>
-                <Input id="password" type="password" required />
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  {...register("password", { required: true })}
+                />
               </div>
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full">
