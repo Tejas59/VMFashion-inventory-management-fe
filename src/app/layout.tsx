@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ReduxProvider from "@/providers/ReduxProvider";
-
+import RoutingGuard from "@/components/Routes/RoutingGuard";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,8 +30,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased  flex`}
       >
         <ReduxProvider>
-         
-          {children}
+          <RoutingGuard>{children} </RoutingGuard>
         </ReduxProvider>
       </body>
     </html>

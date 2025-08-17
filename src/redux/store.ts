@@ -1,32 +1,28 @@
 import trendyfashApi from "@/apis";
 import { AnyAction, combineReducers, configureStore } from "@reduxjs/toolkit";
 import storage from "redux-persist/lib/storage";
-import { persistReducer, persistStore } from "redux-persist";
+import { persistReducer } from "redux-persist";
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
 };
+
 import authReducer from "./authSlice";
 import productReducer from "./productSlice";
-import { CombinedState } from "@reduxjs/toolkit/query/react";
+import dashboardReducer from "./dashboardSlice";
 
 const appReducer = combineReducers({
   auth: authReducer,
   product: productReducer,
+  dashboard: dashboardReducer,
 });
 
 const rootReducer = (
-  state:
-    | CombinedState<{
-        auth: any;
-        product: any;
-      }>
-    | undefined,
+  state: ReturnType<typeof appReducer> | undefined,
   action: AnyAction
 ) => {
-  // dispatch this action directly by matching the type here to reset store to its initial state
   if (action.type === "USER_LOGOUT") {
     storage.removeItem("persist:root");
     return appReducer(undefined, action);

@@ -1,6 +1,16 @@
-const useAutentication = () => {};
+import { useAppSelector } from "../redux/hooks";
 
-export default useAutentication;
+const useAuthentication = () => {
+  const loggedInUser = useAppSelector((state) => state.persistedReducer.auth);
+  const isAuthenticated = loggedInUser.value.kind === "AUTHORIZED";
 
+  return {
+    isAuthenticated,
+    payload:
+      loggedInUser.value.kind === "AUTHORIZED"
+        ? loggedInUser.value.payload
+        : null,
+  };
+};
 
-//get the status if user is logged in or not 
+export default useAuthentication;

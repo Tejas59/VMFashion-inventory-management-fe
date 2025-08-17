@@ -3,7 +3,7 @@ import {
   Home,
   PackageSearch,
   ShoppingBasket,
-  ShoppingCart
+  ShoppingCart,
 } from "lucide-react";
 
 import {
@@ -17,6 +17,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { PATHS } from "@/utils/constant";
+import { useAppDispatch } from "@/redux/hooks";
+import { logout } from "@/redux/authSlice";
 
 // Menu items.
 const items = [
@@ -42,7 +44,13 @@ const items = [
   },
 ];
 
+
 const SideBar = () => {
+  const dispatch = useAppDispatch();
+  const handleLogoutClick = () => {
+    dispatch(logout());
+  };
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -60,6 +68,13 @@ const SideBar = () => {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+            </SidebarMenu>
+            <SidebarMenu className="mt-[400px]">
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={handleLogoutClick}>
+                  <span>Logout</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -16,12 +16,15 @@ import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import { PATHS } from "@/utils/constant";
 import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/redux/hooks";
+import { authenticate } from "@/redux/authSlice";
 
 export const LoginForm = ({
   className,
   ...props
 }: React.ComponentProps<"div">) => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [userLoginPayload, { isSuccess }] = useUserLoginMutation();
 
   const { register, handleSubmit } = useForm({
@@ -52,7 +55,15 @@ export const LoginForm = ({
               userLoginPayload({
                 email: data.email,
                 password: data.password,
-              });
+              }).unwrap();
+              dispatch(
+                authenticate({
+                  payload: {
+                    email: data.email,
+                    password: data.password,
+                  },
+                })
+              );
             })}
           >
             <div className="flex flex-col gap-6">
