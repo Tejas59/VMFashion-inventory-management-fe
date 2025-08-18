@@ -12,6 +12,9 @@ export const authSlice = createSlice({
   name: "authentication",
   initialState,
   reducers: {
+    hydrate: (_state, action) => {
+      return action.payload;
+    },
     authenticate: (
       state,
       action: PayloadAction<{ payload: Authentication }>
@@ -29,6 +32,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { authenticate, logout } = authSlice.actions;
+export const { authenticate, hydrate, logout } = authSlice.actions;
 
 export default authSlice.reducer;

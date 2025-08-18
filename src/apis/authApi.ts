@@ -1,3 +1,4 @@
+import { UserData, UserLoginPayload } from "@/models/auth.interface";
 import trendyfashApi from ".";
 
 export const authApi = trendyfashApi.injectEndpoints({
@@ -12,7 +13,7 @@ export const authApi = trendyfashApi.injectEndpoints({
         method: "POST",
       }),
     }),
-    userLogin: builder.mutation<void, { password: string; email: string }>({
+    userLogin: builder.mutation<UserData, UserLoginPayload>({
       query: ({ email, password }) => ({
         url: "auth/login",
         method: "POST",

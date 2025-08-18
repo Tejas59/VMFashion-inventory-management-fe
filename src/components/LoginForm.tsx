@@ -13,9 +13,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { useUserLoginMutation } from "@/apis/authApi";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 import { PATHS } from "@/utils/constant";
-import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/redux/hooks";
 import { authenticate } from "@/redux/authSlice";
 
@@ -23,9 +21,8 @@ export const LoginForm = ({
   className,
   ...props
 }: React.ComponentProps<"div">) => {
-  const router = useRouter();
   const dispatch = useAppDispatch();
-  const [userLoginPayload, { isSuccess }] = useUserLoginMutation();
+  const [userLoginPayload] = useUserLoginMutation();
 
   const { register, handleSubmit } = useForm({
     defaultValues: {
@@ -34,11 +31,6 @@ export const LoginForm = ({
     },
   });
 
-  useEffect(() => {
-    if (isSuccess) {
-      router.push(PATHS.HOME);
-    }
-  });
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -50,20 +42,21 @@ export const LoginForm = ({
         </CardHeader>
         <CardContent>
           <form
-            onSubmit={handleSubmit((data) => {
-              console.log("Form data:", data);
-              userLoginPayload({
-                email: data.email,
-                password: data.password,
-              }).unwrap();
-              dispatch(
-                authenticate({
-                  payload: {
-                    email: data.email,
-                    password: data.password,
-                  },
-                })
-              );
+            onSubmit={handleSubmit(async (data) => {
+              try {
+                const response = await userLoginPayload({
+                  email: data.email,
+                  password: data.password,
+                }).unwrap();
+
+                dispatch(
+                  authenticate({
+                    payload: response.user,
+                  })
+                );
+              } catch (error) {
+                console.error("Login failed", error);
+              }
             })}
           >
             <div className="flex flex-col gap-6">
@@ -98,7 +91,7 @@ export const LoginForm = ({
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
               <Link
-                href="/registration"
+                href={PATHS.REGISTER}
                 className="underline underline-offset-4"
               >
                 Sign up
